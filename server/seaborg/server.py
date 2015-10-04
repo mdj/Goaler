@@ -18,6 +18,12 @@ from bottle import default_app
 debug(True)
 bottle.TEMPLATE_PATH.append("views")
 
+def dict_factory(cursor, row):
+    d = {}
+    for idx,col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
 
 @route('/todo')
 def todo_list():
@@ -115,6 +121,7 @@ def show_json(json):
 @route('/')
 def overview():
     conn = sqlite3.connect('seaborg_god.db')
+    conn.row_factory = dict_factory
     c = conn.cursor()
     c.execute("SELECT id, name, outline, responsible FROM tasks;")
     result = c.fetchall()
