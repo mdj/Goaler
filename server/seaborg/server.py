@@ -113,8 +113,15 @@ def show_json(json):
 
 
 @route('/')
-def hello():
-    return "OK"
+def overview():
+    conn = sqlite3.connect('seaborg_god.db')
+    c = conn.cursor()
+    c.execute("SELECT id, name, outline, responsible FROM tasks;")
+    result = c.fetchall()
+    c.close()
+
+    output = template('make_table', rows=result)
+    return output
     
 
 
