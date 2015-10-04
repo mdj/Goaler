@@ -9,7 +9,76 @@
 </head>
 <body>
 
+<form action="new_task" method="post" accept-charset="utf-8">
+    <table border="0" cellspacing="5" cellpadding="5">
+    <tr>
+        <td>Name</td>
+        <td><input type="text" name="task_name" value="Task name" id="task_name">
+    </tr>
+    <tr>
+        <td>Created by</td>
+        <td><input type="text" name="task_created_by" value="Created by" id="task_created_by">
+    </tr>
 
+
+    </table>
+
+    <p><input type="submit" value="Continue &rarr;"></p>
+</form>
+
+
+
+
+
+<form action="new" method="post" accept-charset="utf-8">
+    <label for="task_headline">Task headline</label><input type="text" name="task_headline" value="" id="task_headline"><br>
+    
+
+    Proposal date: 2015-10-03<br>
+    Approval date: <br>
+    Completion date:<br>
+    Rejection date:<br>
+
+    Proposed by: <input name="proposedby" value="John Doe <john.doe@seaborg.co"><br>
+    Task responsible: <input name="responsible" value="Betty Jane <betty.jane@seaborg.co"><br>
+    Reporting to: <input name="reportingto" value="Brian O'Connor <brian.oconnor@seaborg.co"><br>
+    Approval by: <input name="aprovalby" value="VP of Division, Kent Williams <kent.williams@seaborg.co"><br>
+
+    Task outline<br>
+    <textarea name="outline" rows="8" cols="40">
+        We require more computer power in the wet labs. The purpose of this task is to estimate the need and define three relevant proposals for how we solve the problem including budgets. The final deliverable is a report for VP of engineering Kent Williams with the estimates, solutions and a recommendation.
+    </textarea>
+
+    <h2>Task Axioms</h2>
+<textarea name="axioms" rows="8" cols="40">
+    It is essential to have..
+</textarea>
+    <h2>Task goals</h2>
+<textarea name="goals" rows="8" cols="40">Goals</textarea>
+    <h2>Task objectives</h2>
+<textarea name="objectives" rows="8" cols="40">Objectives</textarea>
+    <h2>Task deliverables</h2>
+    <textarea name="deliverables" rows="8" cols="40">Deliverables</textarea>
+
+    <h2>References</h2>
+    <textarea name="references" rows="8" cols="40">References</textarea>
+    <h2>Budget</h2>
+    <textarea name="budget" rows="8" cols="40">budget</textarea>
+    <h2>Progress report</h2>
+    <textarea name="progressreport" rows="8" cols="40">Link to progress report</textarea>
+
+    Change log<br>
+
+
+    2015-10-13: Document approved by Kent Williams<br>
+    2015-10-03: Document created by John Doe<br>
+
+
+    
+    
+
+    <p><input type="submit" value="Continue &rarr;"></p>
+</form>
 
 </body>
 </html>
