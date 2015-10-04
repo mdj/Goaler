@@ -18,10 +18,6 @@ bottle.debug(True)
 bottle.TEMPLATE_PATH.append("views")
 
 
-@route('/')
-def hello():
-    return "OK"
-    
 @route('/todo')
 def todo_list():
 
@@ -113,6 +109,12 @@ def show_json(json):
         return {'task':'This item number does not exist!'}
     else:
         return {'Task': result[0]}
+
+
+@route('/')
+def hello():
+    return "OK"
+    
 
 
 @error(403)
