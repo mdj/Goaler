@@ -10,11 +10,12 @@
 
 import sqlite3
 from bottle import route, run, debug, template, request, static_file, error
+import bottle
 
 # only needed when you run Bottle on mod_wsgi
 from bottle import default_app
 
-bottle.debug(True)
+debug(True)
 bottle.TEMPLATE_PATH.append("views")
 
 
@@ -124,8 +125,3 @@ def mistake403(code):
 @error(404)
 def mistake404(code):
     return 'Sorry, this page does not exist!'
-
-
-# debug(True)
-# run(reloader=True)
-#remember to remove reloader=True and debug(True) when you move your application from development to a productive environment
