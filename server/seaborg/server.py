@@ -14,6 +14,10 @@ from bottle import route, run, debug, template, request, static_file, error
 # only needed when you run Bottle on mod_wsgi
 from bottle import default_app
 
+bottle.debug(True)
+bottle.TEMPLATE_PATH.append("views")
+
+
 @route('/')
 def hello():
     return "OK"
