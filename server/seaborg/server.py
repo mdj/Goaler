@@ -11,7 +11,7 @@
 import sqlite3
 from bottle import route, run, debug, template, request, static_file, error, response
 import bottle
-from p# print import p# print
+from pprint import pprint
 
 import json
 import jwt
@@ -313,7 +313,7 @@ def update_deliverable(task_id, id):
 
     data = request.json
     if data:
-        p# print(data)
+        # pprint(data)
         # print "ID", id, "deliv,", int(data['isdelivered'])
 
         conn = sqlite3.connect('seaborg_god.db')
@@ -332,7 +332,7 @@ def add_deliverable(task_id):
     data = request.json
     if data:
 
-        p# print(data)
+        # pprint(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
