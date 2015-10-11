@@ -143,7 +143,7 @@ def auth_user():
 @route("/overview/json", method="GET")
 def overview_json():
     for head in request.headers:
-        # print head, request.headers.get(head)
+    # print head, request.headers.get(head)
     auth = request.headers.get("Authorization")
     if not auth:
         return authenticate({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'})
@@ -332,7 +332,7 @@ def add_deliverable(task_id):
     data = request.json
     if data:
 
-        # pprint(data)
+        # print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
