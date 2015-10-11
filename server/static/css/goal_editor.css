@@ -1,0 +1,297 @@
+@media screen {
+    body {
+        background-color: #EAEAEA;
+
+    }
+    .paper {
+        max-width: 800px;
+
+    /*    border: 1px solid #eee;*/
+        background-color: #FFF;
+        box-shadow: 0px 0px 4px #aaa;
+        padding: 80px;
+        margin: 15px auto;
+        position: relative;
+    }
+    .paper p {
+            text-align: justify;
+
+    }
+
+    .login_screen {
+        background-color: #ccc;
+        text-align: center;
+    }
+    #paper_frame {
+        overflow: scroll;
+        position: absolute;
+        bottom: 0;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+    #title {
+        width: 100%;
+    /*    height: auto;*/
+    /*    overflow: scroll;*/
+        font: 240% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+        border: 0;
+        left: -5px;
+        position: relative;
+    }
+
+    #outline {
+        width: 100%;
+        font: 100% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+        border: 0;
+
+    }
+    textarea {
+        font: inherit;
+        width: 100%;
+        border: 0;
+
+    }
+    .explanation {
+        color: #999;
+        font-size: 90%;
+    }
+
+    #status {
+        position: absolute;
+        right: -30px;
+        transform: rotate(90deg);
+        top: 80px;
+    }
+    #status p {
+        margin: 0;
+        padding: 0;
+        width: auto;
+    }
+
+    .menu_btn {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #999;
+        background-color: #feefee;
+        float: right;
+    }
+
+    .list_element_style:focus {
+        border: 1px solid orange;
+    }
+
+    input[type=text], textarea {
+      -webkit-transition: all 0.30s ease-in-out;
+      -moz-transition: all 0.30s ease-in-out;
+      -ms-transition: all 0.30s ease-in-out;
+      -o-transition: all 0.30s ease-in-out;
+      outline: none;
+      padding: 3px 0px 3px 3px;
+      margin: 5px 1px 3px 0px;
+      border: 1px solid #DDDDDD;
+    }
+     
+    input[type=text]:focus, textarea:focus {
+      box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+      padding: 3px 0px 3px 3px;
+      margin: 5px 1px 3px 0px;
+      border: 1px solid rgba(81, 203, 238, 1);
+    }
+
+    .item_controls {
+        display: none;
+    }
+
+    .item input[type=checkbox] {
+
+        display: inline-block;
+         margin-top: 0;
+         margin-right: 5px;
+    }
+    .item .headline {
+        font-size: 120%;
+        font-weight: bold;
+    }
+    .item_done .headline {
+        text-decoration: line-through;
+    }
+
+    textarea {
+        resize: none; /* remove resize handle, script takes care of expanding the box when needed */
+        word-wrap: break-word;
+        transition: 0.05s;
+        -moz-transition: 0.05s;
+        -webkit-transition: 0.05s;
+        -o-transition: 0.05s;
+        
+        /*padding:0;*/
+        /*margin:0;*/
+
+        /*border:0;*/
+    /*    margin-left:-5px;*/
+        
+    }
+
+
+    * {
+      -webkit-font-smoothing:antialiased !important;
+    }
+
+
+    #navi_menu {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: 60px;
+        z-index: 2;
+        background-color: #FFF;
+        box-shadow: 0px 0px 6px #aaa;
+        
+    }
+
+
+    .menu_btn_blue {
+        border-radius: 2px;
+        /* Rectangle 3: */
+        background-image: -o-linear-gradient(-89deg, #53A0FD 0%, #4A90E2 100%);
+        background-image: -moz-linear-gradient(-89deg, #53A0FD 0%, #4A90E2 100%);
+        background-image: -ms-linear-gradient(-89deg, #53A0FD 0%, #4A90E2 100%);
+        background-image: linear-gradient(-179deg, #53A0FD 0%, #4A90E2 100%);
+        border: 1px solid #4A90E2;
+    }
+    .menu_btn_purple {
+        border-radius: 2px;
+        /* Rectangle 3: */
+        background-image: -o-linear-gradient(-89deg, #CC6AF8 0%, #B54FE3 100%);
+        background-image: -moz-linear-gradient(-89deg, #CC6AF8 0%, #B54FE3 100%);
+        background-image: -ms-linear-gradient(-89deg, #CC6AF8 0%, #B54FE3 100%);
+        background-image: linear-gradient(-179deg, #CC6AF8 0%, #B54FE3 100%);
+        border: 1px solid #B54FE3;
+    }
+    .menu_btn_grey {
+        border-radius: 2px;
+        /* Rectangle 3: */
+        background-image: -o-linear-gradient(-89deg, #F1F1F1 0%, #EDEDED 100%);
+        background-image: -moz-linear-gradient(-89deg, #F1F1F1 0%, #EDEDED 100%);
+        background-image: -ms-linear-gradient(-89deg, #F1F1F1 0%, #EDEDED 100%);
+        background-image: linear-gradient(-179deg, #F1F1F1 0%, #EDEDED 100%);
+        border: 1px solid #DDDDDD;
+    }
+    .menu_home {
+        /* Rectangle 2: */
+        background:;
+        width: 45px;
+        height: 100%;
+        position: absolute;
+        left: 0px;
+        background: #b54fe3 url(/static/images/docicon@2x.png) no-repeat center center;
+        background-size: 20px 15px;
+    }
+    #menu_left {
+    /*    background-color: #ccc;*/
+        position: absolute;
+        left: 66px;
+        top: 10px;
+        width: calc(50%);
+        height: 100%;
+    }
+    #menu_right {
+    /*    background-color: #eee;*/
+        position: absolute;
+        top: 2px;
+        right: 15px;
+        width: calc(50% - 56px);
+        height: 100%;
+    }
+
+    #save_status {
+    /*    position: absolute;*/
+    /*    right: 30px;*/
+    /*    bottom: 10px;*/
+        color: #666;
+        float: left;
+    }
+
+    .controls {
+        font-size: 90%;
+    /*    padding: 4px;*/
+    }
+    .menu_title {
+        font-size: 115%;
+    /*    padding: 4px;*/
+        margin-bottom: 5px;
+    }
+
+    .user_menu {
+        position: absolute;
+        right: 10px;
+        top: 4px;
+        font-size: 80%;
+    }
+    .master_controls {
+        position: absolute;
+        right: 10px;
+        top: 25px;
+        width: 100%;
+        height: 30px;
+
+    }
+    .control_btn {
+
+        font-size: 80%;
+        color: white;
+        font-weight: 600;
+        width: auto;
+        padding: 6px 14px;
+        float: right;
+        margin-left: 10px;
+    /*    right: 10px;*/
+    /*    top: 25px;*/
+    }
+    #reject {
+        color: black;
+    }
+
+
+    .task_due {
+        color: orange;
+    }
+
+    .task_overdue {
+        color: red;
+    }
+    .task_not_due {
+        color: green;
+    }
+
+    .deadline {
+        font-size: 120%;
+        font-weight: bold;
+    }
+    .implicit_rules {
+        font-size: 80%;
+    }
+}
+@media print {
+    #navi_menu {
+        display: none;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    textarea {
+        width: 100%;
+        border: 0;
+        font-size: 200%;
+        height: auto;
+        overflow: visible!important;
+        page-break-inside: avoid !important;
+    }
+
+}
+
