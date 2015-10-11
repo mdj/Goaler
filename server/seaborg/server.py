@@ -360,7 +360,7 @@ def add_axiom(task_id):
 
     data = request.json
     if data:
-        p# print(data)
+        # print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
@@ -387,7 +387,7 @@ def add_goal(task_id):
 
     data = request.json
     if data:
-        p# print(data)
+        # print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
@@ -414,7 +414,7 @@ def add_objective(task_id):
 
     data = request.json
     if data:
-        p# print(data)
+        # print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
@@ -441,7 +441,7 @@ def add_reference(task_id):
 
     data = request.json
     if data:
-        p# print(data)
+        # print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
@@ -592,7 +592,7 @@ def task_command(task_id):
 
 
     if data:
-        p# print(data)
+        # print(data)
         
         conn = sqlite3.connect('seaborg_god.db')
         conn.row_factory = dict_factory
@@ -655,7 +655,7 @@ def task_command(task_id):
         """, (task_id,))
         # c.execute("SELECT tasks.*  FROM tasks, people WHERE id = ?", (task_id,))
         task = c.fetchone()
-        # p# print( task)
+        # # print( task)
 
         created_email = task['created_email']
         approver_email = task['department_approval_email']
@@ -895,7 +895,7 @@ def update_deliverable(task_id):
     # print "UPDATING\n\n"
     data = request.json
     if data:
-        p# print(data)
+        # print(data)
         # print "ID", task_id
 
         conn = sqlite3.connect('seaborg_god.db')
@@ -1015,7 +1015,7 @@ def show_task(item):#, uid):
     # print "task_id", task_id
     c.execute("SELECT axioms.name, axioms.definition_date, axioms.text, axioms.definition_date, people.name as responsible_name, people.email as responsible_email FROM axioms, people WHERE axioms.task_id LIKE ? AND axioms.defined_by = people.id", (task_id,))
     axioms = c.fetchall()
-    p# print(axioms)
+    # print(axioms)
 
     c.execute("SELECT * FROM goals WHERE task_id=?", (str(task_id),))
     goals = c.fetchall()
