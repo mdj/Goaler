@@ -142,8 +142,8 @@ def auth_user():
 
 @route("/overview/json", method="GET")
 def overview_json():
-    for head in request.headers:
-    # print head, request.headers.get(head)
+    # for head in request.headers:
+        # print head, request.headers.get(head)
     auth = request.headers.get("Authorization")
     if not auth:
         return authenticate({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'})
