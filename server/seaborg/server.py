@@ -881,6 +881,7 @@ def task_command(task_id):
 
 
         else:
+            pass
             # print "Unknown command", data
             
         c.close()
