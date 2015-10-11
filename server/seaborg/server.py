@@ -870,7 +870,7 @@ def task_command(task_id):
             # Send emails to: creator, approver
 
         elif data['action'] == "requestApproval":
-            print "Approval requested by", payload['name']
+            print u"Approval requested by", payload['name']
             if task['created_by'] == payload['id']:
                 print "Approval request accepted from creator"
                 c.execute("UPDATE tasks SET approval_requested = ?  WHERE id LIKE ?", (data['req_approval_date'], task_id))
