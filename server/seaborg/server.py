@@ -11,7 +11,7 @@
 import sqlite3
 from bottle import route, run, debug, template, request, static_file, error, response
 import bottle
-from pprint import pprint
+from p# print import p# print
 
 import json
 import jwt
@@ -69,7 +69,7 @@ def mail(to, to_name, subject, message):
     html = textwrap.dedent(message)
     text = textwrap.dedent(message)
      
-    # Default encoding mode set to Quoted Printable. Acts globally!
+    # Default encoding mode set to Quoted # printable. Acts globally!
     Charset.add_charset('utf-8', Charset.QP, Charset.QP, 'utf-8')
      
     # 'alternative’ MIME type – HTML and plain text bundled in one e-mail message
@@ -118,7 +118,7 @@ def auth_user():
     if person:
         if check_password(person['password'], login_data['password']):
 
-            print "login successful!"
+            # print "login successful!"
 
             del person['password'] # remove to avoid passing it around
 
@@ -126,7 +126,7 @@ def auth_user():
             company_info = c.fetchone()    
 
             encoded = jwt.encode(person, company_info['jwt_secret'], algorithm='HS256')
-            print 'encoded', encoded
+            # print 'encoded', encoded
             return {"token" : encoded, "userinfo": person}            
 
     response.status = 403
@@ -143,7 +143,7 @@ def auth_user():
 @route("/overview/json", method="GET")
 def overview_json():
     for head in request.headers:
-        print head, request.headers.get(head)
+        # print head, request.headers.get(head)
     auth = request.headers.get("Authorization")
     if not auth:
         return authenticate({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'})
@@ -182,12 +182,12 @@ def overview_json():
         return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
 
     date_sent = parseDate(request.query.date_today)
-    print date_sent
-    print request.query.cid
-    print request.forms.get('cid')
-    print request.json
-    print "decoded", payload
-    # print "loading task id", item
+    # print date_sent
+    # print request.query.cid
+    # print request.forms.get('cid')
+    # print request.json
+    # print "decoded", payload
+    # # print "loading task id", item
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
@@ -297,7 +297,7 @@ def overview_json():
 
 @route('/task/<task_id:int>/deliverable/<id:int>/delete', method="GET")
 def delete_deliverable(task_id, id):
-    print "Deleting Deliverable with ID", id
+    # print "Deleting Deliverable with ID", id
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
@@ -313,8 +313,8 @@ def update_deliverable(task_id, id):
 
     data = request.json
     if data:
-        pprint(data)
-        print "ID", id, "deliv,", int(data['isdelivered'])
+        p# print(data)
+        # print "ID", id, "deliv,", int(data['isdelivered'])
 
         conn = sqlite3.connect('seaborg_god.db')
         conn.row_factory = dict_factory
@@ -332,11 +332,11 @@ def add_deliverable(task_id):
     data = request.json
     if data:
 
-        pprint(data)
-        print "task_ID", task_id
+        p# print(data)
+        # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
-            print "ERROR task id mismatch", data['task_id'], task_id
+            # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
             
         conn = sqlite3.connect('seaborg_god.db')
@@ -360,11 +360,11 @@ def add_axiom(task_id):
 
     data = request.json
     if data:
-        pprint(data)
-        print "task_ID", task_id
+        p# print(data)
+        # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
-            print "ERROR task id mismatch", data['task_id'], task_id
+            # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
             
         conn = sqlite3.connect('seaborg_god.db')
@@ -387,11 +387,11 @@ def add_goal(task_id):
 
     data = request.json
     if data:
-        pprint(data)
-        print "task_ID", task_id
+        p# print(data)
+        # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
-            print "ERROR task id mismatch", data['task_id'], task_id
+            # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
             
         conn = sqlite3.connect('seaborg_god.db')
@@ -414,11 +414,11 @@ def add_objective(task_id):
 
     data = request.json
     if data:
-        pprint(data)
-        print "task_ID", task_id
+        p# print(data)
+        # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
-            print "ERROR task id mismatch", data['task_id'], task_id
+            # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
             
         conn = sqlite3.connect('seaborg_god.db')
@@ -441,11 +441,11 @@ def add_reference(task_id):
 
     data = request.json
     if data:
-        pprint(data)
-        print "task_ID", task_id
+        p# print(data)
+        # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
-            print "ERROR task id mismatch", data['task_id'], task_id
+            # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
             
         conn = sqlite3.connect('seaborg_god.db')
@@ -512,11 +512,11 @@ def delete_task(task_id):
     except jwt.DecodeError:
         return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
 
-    print "decoded", payload
+    # print "decoded", payload
 
 
 
-    print "Deleting task with ID", task_id
+    # print "Deleting task with ID", task_id
 
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
@@ -533,7 +533,7 @@ def delete_task(task_id):
         conn.commit()
         conn.close()
     except sqlite3.Error as e:
-            print "An error occurred:", e.args[0]
+            # print "An error occurred:", e.args[0]
             conn.close()
             return {"status" : "error", "message": e.args[0]}
 
@@ -545,9 +545,9 @@ def task_command(task_id):
     """docstring for task_command"""
     data = request.json
 
-    # # print [item for item in request.headers]
+    # # # print [item for item in request.headers]
     # for item in request.headers.items():
-    #     print item
+    #     # print item
 
     auth = request.headers.get("Authorization")
     if not auth:
@@ -586,13 +586,13 @@ def task_command(task_id):
     except jwt.DecodeError:
         return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
 
-    print "decoded", payload
+    # print "decoded", payload
 
 
 
 
     if data:
-        pprint(data)
+        p# print(data)
         
         conn = sqlite3.connect('seaborg_god.db')
         conn.row_factory = dict_factory
@@ -655,17 +655,17 @@ def task_command(task_id):
         """, (task_id,))
         # c.execute("SELECT tasks.*  FROM tasks, people WHERE id = ?", (task_id,))
         task = c.fetchone()
-        # pprint( task)
+        # p# print( task)
 
         created_email = task['created_email']
         approver_email = task['department_approval_email']
         assignee_email = task['responsible_email']
         reporting_to_email = task['reporting_to_email']
 
-        print "Director:",approver_email
-        print "Created by:", created_email
-        print "Assigned to:", assignee_email
-        print "Reporting to:", reporting_to_email
+        # print "Director:",approver_email
+        # print "Created by:", created_email
+        # print "Assigned to:", assignee_email
+        # print "Reporting to:", reporting_to_email
 
         # Fecthing head of department in question
         c.execute("SELECT department_head FROM departments WHERE id = ?", (str(task['department_owner'])))
@@ -676,7 +676,7 @@ def task_command(task_id):
         
             
         if data['action'] == "approve" and (int(department_head['department_head']) ==  int(payload['id'])):
-            print "Ready to approve"
+            # print "Ready to approve"
             c.execute("UPDATE tasks SET approval_date = ?, approved_by = ?, rejection_date = '', rejected_by = '' WHERE id LIKE ?", (data['approval_date'], payload['id'], task_id))
             conn.commit()
 
@@ -722,7 +722,7 @@ def task_command(task_id):
                 approver=task['department_approval_by'],
                 approver_email=approver_email)
 
-            print text
+            # print text
             mail("mdam@gluino.com", task['responsible_name'], subject, text) # to the responsible
     
 
@@ -762,7 +762,7 @@ def task_command(task_id):
                 approver=task['department_approval_by'],
                 approver_email=approver_email)
 
-            print text
+            # print text
             mail("mdam@gluino.com", task['reporting_to_name'], subject, text) # to the reporting officer
 
 
@@ -803,7 +803,7 @@ def task_command(task_id):
                 approver_email=approver_email,
                 creator_name=task['created_name'])
 
-            print text
+            # print text
             mail("mdam@gluino.com", task['created_name'], subject, text) # to the creator
 
 
@@ -834,14 +834,14 @@ def task_command(task_id):
                 approver_email=approver_email,
                 creator_name=task['created_name'])
 
-            print text
+            # print text
             mail("mdam@gluino.com", task['department_approval_by'], subject, text) # to the creator
 
 
 
 
         elif data['action'] == "reject" and (int(department_head['department_head']) ==  int(payload['id'])):
-            print "Ready to reject"
+            # print "Ready to reject"
             c.execute("UPDATE tasks SET rejection_date = ?, rejected_by = ?, approval_date = '', approved_by = '' WHERE id LIKE ?", (data['rejection_date'], payload['id'], task_id))
             conn.commit()
 
@@ -852,7 +852,7 @@ def task_command(task_id):
             # Send emails to: creator, responsible, reporting officer, approver
 
         elif data['action'] == "completed" and (int(department_head['department_head']) ==  int(payload['id'])):
-            print "Ready to complete"
+            # print "Ready to complete"
             c.execute("UPDATE tasks SET completion_date = ?, completed_by = ? WHERE id LIKE ?", (data['completion_date'], payload['id'], task_id))
             conn.commit()
 
@@ -870,9 +870,9 @@ def task_command(task_id):
             # Send emails to: creator, approver
 
         elif data['action'] == "requestApproval":
-            print u"Approval requested by", payload['name']
+            # print u"Approval requested by", payload['name']
             if task['created_by'] == payload['id']:
-                print "Approval request accepted from creator"
+                # print "Approval request accepted from creator"
                 c.execute("UPDATE tasks SET approval_requested = ?  WHERE id LIKE ?", (data['req_approval_date'], task_id))
                 conn.commit()
 
@@ -881,7 +881,7 @@ def task_command(task_id):
 
 
         else:
-            print "Unknown command", data
+            # print "Unknown command", data
             
         c.close()
     
@@ -891,11 +891,11 @@ def task_command(task_id):
 @route('/task/<task_id:int>/update', method="POST")
 def update_deliverable(task_id):
     """Update content of task"""
-    print "UPDATING\n\n"
+    # print "UPDATING\n\n"
     data = request.json
     if data:
-        pprint(data)
-        print "ID", task_id
+        p# print(data)
+        # print "ID", task_id
 
         conn = sqlite3.connect('seaborg_god.db')
         conn.row_factory = dict_factory
@@ -949,8 +949,8 @@ def show_task(item):#, uid):
     except jwt.DecodeError:
         return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
 
-    print "decoded", payload
-    print "loading task id", item
+    # print "decoded", payload
+    # print "loading task id", item
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
@@ -1011,18 +1011,18 @@ def show_task(item):#, uid):
         
 
     task_id = str(item)
-    print "task_id", task_id
+    # print "task_id", task_id
     c.execute("SELECT axioms.name, axioms.definition_date, axioms.text, axioms.definition_date, people.name as responsible_name, people.email as responsible_email FROM axioms, people WHERE axioms.task_id LIKE ? AND axioms.defined_by = people.id", (task_id,))
     axioms = c.fetchall()
-    pprint(axioms)
+    p# print(axioms)
 
     c.execute("SELECT * FROM goals WHERE task_id=?", (str(task_id),))
     goals = c.fetchall()
-    print goals
+    # print goals
 
     c.execute("SELECT * FROM objectives WHERE task_id=?", (str(task_id),))
     objectives = c.fetchall()
-    print objectives
+    # print objectives
 
 
     c.execute("SELECT * FROM deliverables WHERE task_id=?", (str(task_id),))
@@ -1038,7 +1038,7 @@ def show_task(item):#, uid):
 
     c.execute("SELECT * FROM task_references WHERE task_id=?", (str(task_id),))
     references = c.fetchall()
-    print references
+    # print references
     
     c.close()
     task['goals'] = goals    
@@ -1074,7 +1074,7 @@ def new_task_submit():
 
     auth = request.headers.get("Authorization")
     if not auth:
-        print "auth failed"
+        # print "auth failed"
         return authenticate({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'})
 
     parts = auth.split()
@@ -1110,7 +1110,7 @@ def new_task_submit():
     except jwt.DecodeError:
         return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
 
-    print "decoded", payload
+    # print "decoded", payload
 
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
