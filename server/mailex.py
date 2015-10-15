@@ -24,7 +24,7 @@ def mail(to, subject, message):
 
 
 
-def mailto(to, to_name, subject, message):
+def mail(to, to_name, subject, message):
 	from cStringIO import StringIO
 	from email.mime.multipart import MIMEMultipart
 	from email.mime.text import MIMEText

@@ -1,9 +1,24 @@
-var app = angular.module('godApp', ['ui.bootstrap','timeSince'],function($interpolateProvider) {
+google.load('visualization', '1', {packages:['orgchart']});
+
+var app = angular.module('godApp', ['ui.bootstrap','timeSince','googlechart'],function($interpolateProvider) {
     // set custom delimiters for angular templates
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 });
 
+
+app.directive('orgchart', function() {
+      return {
+        restrict: 'E',
+        link: function($scope, $elm) {
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.OrgChart($elm[0]);
+          chart.draw($scope.orgChartData);
+        }
+    }
+  });
+    
 
 app.factory('authInterceptor', function ($rootScope, $q, $window) {
   return {
@@ -138,7 +153,24 @@ app.directive('autoGrow', function() {
     };
 });
 
-app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location','$window', function($scope, $http, $timeout, $log, $location, $window) {
+app.factory('Page', function() {
+   var title = 'default';
+   return {
+     title: function() { return title; },
+     setTitle: function(newTitle) { console.log("Setting title to", newTitle); title = newTitle; }
+   };
+});
+
+app.controller('MainCtrl', ['$scope','Page', function($scope, Page) {
+  $scope.Page = Page;
+}]);
+
+
+app.controller('OrgOverview', ['$scope', '$http', '$timeout', '$log', '$location','$window','Page', function($scope, $http, $timeout, $log, $location, $window,Page) {
+
+    Page.setTitle('Organisational overview');
+
+    $scope.msg = "tits";
 
     $scope.company_id  = global_company_id;
     $scope.user_email = ($window.sessionStorage.email) ? $window.sessionStorage.email : "";
@@ -165,12 +197,136 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
   $scope.message = '';
 
 
+  $scope.login_submit = function () {
+    $http
+      .post('/authenticate', $scope.user_login)
+      .success(function (data, status, headers, config) {
+        // console.log(data, status, headers, config);
+
+        if (data.change_pass) {
+            $scope.message = 'Please supply a new password (min. 8 characters):'
+            $scope.user_login.must_change_pass = true;
+            return;
+        }
+        // Save to session storage
+        $window.sessionStorage.token = data.token;
+        $window.sessionStorage.uid = data.userinfo.id;
+        $window.sessionStorage.email = data.userinfo.email;
+        $window.sessionStorage.person_name = data.userinfo.name;
+        $window.sessionStorage.person_company_id = data.userinfo.company_id;
+
+        // Update state variables
+        $scope.user_email = $window.sessionStorage.email;
+        $scope.user_name = $window.sessionStorage.person_name;
+        $scope.person_company_id = $window.sessionStorage.person_company_id;
+        $scope.current_user_id = $window.sessionStorage.uid;
+
+        $scope.message = 'Welcome ' + $scope.user_name;
+        $scope.load_departments();
+
+      })
+      .error(function (data, status, headers, config) {
+        // Erase the token if the user fails to log in
+        $scope.logout();
+        // Handle login errors here
+        $scope.message = 'Error: Invalid user or password';
+      });
+  };
+    
+        $scope.userIsAnonymous = function() {
+            return ($scope.current_user_id == "undefined" || $scope.current_user_id == "");
+    }
+
+$scope.load_departments = function() {
+    console.log("loading departments");
+    $http({
+      url: "/org/json",
+      method: "GET",
+      // headers: { 'Content-Type': 'application/json' },
+      params: {cid : 1, date_today: new Date().toISOString().slice(0, 10)}//JSON.stringify({"cid" : $scope.company_id})
+    }).success(function(data) {
+      console.log("data", data);
+      $scope.departments = data.departments;
+
+      var org_data = {
+      "cols" : [
+          {"label": "Name", "pattern": "", "type": "string"},
+          {"label": "Manager", "pattern": "", "type": "string"},
+          {"label": "ToolTip", "pattern": "", "type": "string"}
+      ], 
+      "rows" : []
+    };
+    for (var i = data.departments.length - 1; i >= 0; i--) {
+        org_data.rows.push(
+            { "c": [ 
+              {"v": data.departments[i].id, "f": data.departments[i].title + '<div style="color:blue; font-style:italic">' + data.departments[i].head_name + '</div>' },
+              {"v": data.departments[i].parent_department},
+              {"v": data.departments[i].head_name}
+          ]}
+        );
+    }
+        $scope.chart = {
+          type: "OrgChart",
+          data: org_data,
+          options: {allowHtml: true}
+        };
+    });
+}
+
+
+if ($scope.current_user_id != "") {
+    $scope.load_departments();
+}
+
+
+}]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location','$window','Page', function($scope, $http, $timeout, $log, $location, $window,Page) {
+
+    Page.setTitle('Goals overview');
+
+    $scope.company_id  = global_company_id;
+    $scope.user_email = ($window.sessionStorage.email) ? $window.sessionStorage.email : "";
+    $scope.user_name = ($window.sessionStorage.person_name) ? $window.sessionStorage.person_name : "Anonymous visitor";
+    $scope.person_company_id = ($window.sessionStorage.person_company_id) ? $window.sessionStorage.person_company_id : "";
+    $scope.current_user_id = ($window.sessionStorage.uid) ? $window.sessionStorage.uid : "";
+
+    $scope.tasks = [];
+
+    $scope.logout = function() {
+            delete $window.sessionStorage.token;
+            delete $window.sessionStorage.uid;
+            delete $window.sessionStorage.email;
+            delete $window.sessionStorage.person_name;
+            delete $window.sessionStorage.person_company_id;
+
+            $scope.user_email = "";
+            $scope.user_name = "Anonymous visitor";
+            $scope.person_company_id = "";
+            $scope.current_user_id = "";
+    }
+
+  $scope.user_login = {username: '', password: '', 'cid': $scope.company_id}; // cid is company id needed later
+  $scope.message = '';
+
 
   $scope.login_submit = function () {
     $http
       .post('/authenticate', $scope.user_login)
       .success(function (data, status, headers, config) {
+        // console.log(data, status, headers, config);
 
+        if (data.change_pass) {
+            $scope.message = 'Please supply a new password (min. 8 characters):'
+            $scope.user_login.must_change_pass = true;
+            return;
+        }
         // Save to session storage
         $window.sessionStorage.token = data.token;
         $window.sessionStorage.uid = data.userinfo.id;
@@ -353,6 +509,7 @@ $scope.deliveredChanged = function(deli) {
     });
 
     }
+
 if ($scope.current_user_id != "") {
     $scope.load_overview();
 }
@@ -360,7 +517,17 @@ if ($scope.current_user_id != "") {
 
 }]);
 
-app.controller('GodViewController', ['$scope', '$http', '$timeout', '$log', '$location','$window', function($scope, $http, $timeout, $log, $location, $window) {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+app.controller('GodViewController', ['$scope', '$http', '$timeout', '$log', '$location','$window','Page', function($scope, $http, $timeout, $log, $location, $window,Page) {
+
+    Page.setTitle('Task');
     
 // .controller('GodViewController', function ($scope, $http) {
     // console.log("Location", $location);
@@ -644,6 +811,9 @@ $scope.load_task = function() {
             $scope.budget_id = response.budget_id;
             $scope.parent_department_id = response.parent_department_id;
             
+            Page.setTitle('GOD-' + $scope.task_id + "-" + $scope.creation_date + " " + $scope.task_name);
+    
+
             
             $timeout(expand, 0);
 
@@ -664,6 +834,11 @@ $scope.load_task = function() {
       .post('/authenticate', $scope.user_login)
       .success(function (data, status, headers, config) {
 
+        if (data.change_pass) {
+            $scope.message = 'Please supply a new password (min. 8 characters):'
+            $scope.user_login.must_change_pass = true;
+            return;
+        }
         // Save to session storage
         $window.sessionStorage.token = data.token;
         $window.sessionStorage.uid = data.userinfo.id;

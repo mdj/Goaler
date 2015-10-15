@@ -270,7 +270,13 @@
     .deadline {
         font-size: 120%;
         font-weight: bold;
+
     }
+    .deadline_trigger {
+        color: #428bca;
+        cursor: pointer;
+    }
+
     .implicit_rules {
         font-size: 80%;
     }

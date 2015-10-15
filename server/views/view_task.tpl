@@ -30,15 +30,6 @@
                [[user_name]]  - [[user_email]] - <a ng-click="logout()">logout</a> 
             </div>
 
-            <div class="user_menu" ng-show="!current_user_id">
-              <form ng-submit="login_submit()" >
-                    <span>[[message]]</span>
-
-                <input ng-model="user_login.username" type="text" name="user" placeholder="Username" />
-                <input ng-model="user_login.password" type="password" name="pass" placeholder="Password" />
-                <input type="submit" value="Login" />
-              </form>
-            </div>
             <div class="master_controls">
                     <div id="reopen" class="menu_btn_purple control_btn" ng-click="reopenTask()" ng-show="userIsApprover() && (isApproved() || isRejected() || isCompleted())">
                     Reopen
@@ -81,15 +72,21 @@
 
     <div id="paper_frame">
     <div class="paper login_screen" ng-show="userIsAnonymous()">
-    log in
                   <form ng-submit="login_submit()" >
-                    <span>[[message]]</span>
+                    <div>[[message]]</div>
 
                 <input ng-model="user_login.username" type="text" name="user" placeholder="Username" /><br>
                 <input ng-model="user_login.password" type="password" name="pass" placeholder="Password" /><br>
-                <input type="submit" value="Login" />
+
+                <div ng-show="user_login.must_change_pass">
+                    <input ng-model="user_login.new_password_1" type="password" name="new_pass_1" placeholder="New password" /><br>
+                    <input ng-model="user_login.new_password_2" type="password" name="new_pass_2" placeholder="Retype new password" /><br>
+                </div>
+                <br>
+                <div ng-show="!user_login.change_pass">Change password: <input type='checkbox' ng-model="user_login.must_change_pass" title="change password"></div>
+                <br>
+                                <input type="submit" value="Login" />
               </form>
-              <a href="/task/new">create new task</a>
     </div>
     <div class="paper"  ng-show="!userIsAnonymous()">
     

@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="us" ng-app="godApp">
+<html lang="us" ng-app="godApp" ng-controller="MainCtrl">
 <head>
 	<meta charset="utf-8">
-	<title>[[Page.title]] - Seaborg Tasks</title>
+	<title>[[Page.title()]] - Seaborg Tasks</title>
 	<link href="/static/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
 	<style>
 	body{
@@ -48,10 +48,15 @@
 	}
 	</style>
     
+
+    <!-- bower:js -->
+	<!-- endbower -->
+
     <script src="/static/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
     <script src="/static/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
     <script src="/static/jquery.ns-autogrow.min.js" type="text/javascript" charset="utf-8"></script>
     
+    <script src="http://www.google.com/jsapi?ext.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.4.js"></script>
@@ -59,6 +64,9 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 
     <script src="/static/time_since.js"></script>
+
+    <script src="/static/angular-google-chart.js"></script>
+
     <script src="/static/godApp.js"></script>
     
 </head>

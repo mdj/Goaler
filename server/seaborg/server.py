@@ -101,6 +101,8 @@ def mail(to, to_name, subject, message):
     s.sendmail("", recipient[1], str_io.getvalue())
 
 
+
+
 @route("/authenticate", method="POST")
 def auth_user():
 
@@ -108,17 +110,43 @@ def auth_user():
     # if is invalid, return 401
     login_data =  request.json
 
+    print login_data
+
     conn = sqlite3.connect('seaborg_god.db')
     conn.row_factory = dict_factory
     c = conn.cursor()
 
-
     c.execute("SELECT * FROM people WHERE company_id LIKE ? AND username LIKE ?", (login_data['cid'], login_data['username']))
     person = c.fetchone() 
-    if person:
-        if check_password(person['password'], login_data['password']):
 
-            # print "login successful!"
+    if person:
+
+        if 'send_pass' in login_data:
+            print "send pass word"
+            subject = "Your password for goals.seaborg.co"
+            msg = '''
+            {person.name}
+
+            '''.format(person=person)
+            print msg
+            return
+
+        if check_password(person['password'], login_data['password']):
+            print "login successful!"
+
+            if person['must_change_pw'] or ('new_password_1' in login_data and 'new_password_2' in login_data and len(login_data['new_password_1']) > 7):
+                print "users password expired"
+
+                if ('new_password_1' in login_data and 'new_password_2' in login_data) and len(login_data['new_password_1']) > 7:
+                    if login_data['new_password_1'] == login_data['new_password_2']:
+                        print "new password supplied, encoding and saving"
+                        print login_data['new_password_1']
+                        new_pass = hash_password(login_data['new_password_1'])
+                        print new_pass
+                        c.execute("UPDATE people SET password = ?, must_change_pw = 0 WHERE id = ?", (new_pass, person['id']))
+                        conn.commit()
+                else:
+                    return {"change_pass": True}
 
             del person['password'] # remove to avoid passing it around
 
@@ -131,6 +159,14 @@ def auth_user():
 
     response.status = 403
     return {'error' : 403}
+
+
+@route('/authenticate/change_pass', method="POST")
+def change_password():
+
+    login_data =  request.json
+    print login_data
+    return {"pass_changed" : True}
 
 
 
@@ -290,6 +326,101 @@ def overview_json():
 
     overview = {"tasks" : tasks}
     return overview
+
+
+
+@route('/org/json', method="GET")
+def org_json():
+    auth = request.headers.get("Authorization")
+
+    conn = sqlite3.connect('seaborg_god.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+
+    if not auth:
+        return authenticate({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'})
+
+    parts = auth.split()
+
+
+    if parts[0].lower() != 'bearer':
+        return {'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}
+    elif len(parts) == 1:
+        return {'code': 'invalid_header', 'description': 'Token not found'}
+    elif len(parts) > 2:
+        return {'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}
+
+    token = parts[1]
+    try:
+        c.execute("SELECT * FROM goal_system order by id desc limit 1")
+        goal_system = c.fetchone()    
+
+        payload = jwt.decode(
+            token,
+            goal_system['jwt_secret']
+            #audience=client_id
+        )
+    except jwt.ExpiredSignature:
+        return authenticate({'code': 'token_expired', 'description': 'token is expired'})
+    except jwt.InvalidAudienceError:
+        return authenticate({'code': 'invalid_audience', 'description': 'incorrect audience, expected: ' + client_id})
+    except jwt.DecodeError:
+        return authenticate({'code': 'token_invalid_signature', 'description': 'token signature is invalid'})
+
+    print "decoded", payload
+
+
+
+    c.execute("SELECT departments.*, people.name as head_name, people.email as head_email FROM departments, people WHERE departments.department_head = people.id AND departments.company_id = ?", (payload['company_id'],))
+    departments = c.fetchall()
+    conn.close()
+
+   
+
+    # org = {
+    #   "cols" : [
+    #       {"label": "Name", "pattern": "", "type": "string"},
+    #       {"label": "Manager", "pattern": "", "type": "string"},
+    #       {"label": "ToolTip", "pattern": "", "type": "string"}
+    #   ], 
+    #   "rows" : []
+    # }
+
+
+    #     data.addRows([
+    #       [{v:'Mike', f:'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],
+    #       [{v:'Jim', f:'Jim<div style="color:red; font-style:italic">Vice President</div>'}, 'Mike', 'VP'],
+    #       ['Alice', 'Mike', ''],
+    #       ['Bob', 'Jim', 'Bob Sponge'],
+    #       ['Carol', 'Bob', '']
+    #     ]);
+
+    # for dep in departments:
+    #     # isHead = dep['parent_department'] == dep['id']
+    #     # dep['isHead'] = isHead
+    #     org['rows'].append({ "c": [
+    #           {"v": dep['id'], "f": u'{dep_title}<div style="color:red; font-style:italic">{person_name}</div>'.format(dep_title=dep['title'], person_name=dep['head_name']) },
+    #           {"v": dep['parent_department']},
+    #           {"v": dep['head_name']}
+    #       ]}
+    #     )
+
+
+
+    return {"departments": departments}
+
+
+
+@route('/org')
+def org():
+
+
+
+
+
+
+    return template('org', company={"cid": 1})
+
 
 ###
 # Deliverables 
@@ -1186,5 +1317,5 @@ def mistake404(code):
 
 
 
-
-# run(reloader=True, host='0.0.0.0', port=8087)
+if __name__ == '__main__':
+    run(reloader=True, host='0.0.0.0', port=8087)
