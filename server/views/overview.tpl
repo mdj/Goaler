@@ -18,12 +18,12 @@
     
         <div id="menu_left">
             <div class="menu_title">
-                Goals, Objectives and Deliverables
+                [[company.company_name]]
             </div>
             <div class="controls">
                 <div style="float: left; margin-right: 20px;">
-                    <a href="" ng-click="init_new_task()">New task</a>
-                    <a href="/org" >Company</a>
+
+                    <a href="/org">Company structure</a>
                 </div>
             </div>
 
@@ -38,9 +38,9 @@
             </div>
         </div>
     <div style="position: absolute; top: 60px; width: 100%; box-shadow: 0px 2px 3px #ccc; height: 30px; border-top: 1px solid #e8e8e8; background-color: #efefef; z-index: 100; padding: 3px; font-weight: bold; color: purple" ng-show="!userIsAnonymous()">
-    <span style="float: left"><a href="/task/new">New task</a></span>
-    <span style="float: right">
-        <a href="#" ng-click="overview_view=1">box</a> – <a href="#" ng-click="overview_view=2">gantt</a> – <a href="#" ng-click="overview_view=3">list</a> - <a href="#" ng-click="overview_view=4">people</a> – <a href="#" ng-click="overview_view=5">flowchart</a> – <a href="#" ng-click="overview_view=6">calendar</a>
+    <span style="float: left; margin-left: 10px; color: #555;"><a href="#" ng-click="init_new_task()" style="color: inherit;">New task</a></span>
+    <span style="float: right; color: #555;">
+        <!-- <a href="#" ng-click="overview_view=1" style="color: inherit;">box</a> – <a href="#" ng-click="overview_view=2" style="color: inherit;">gantt</a> – <a href="#" ng-click="overview_view=3" style="color: inherit;">list</a> - <a href="#" ng-click="overview_view=4" style="color: inherit;">people</a> – <a href="#" ng-click="overview_view=5" style="color: inherit;">flowchart</a> – <a href="#" ng-click="overview_view=6" style="color: inherit;">calendar</a> -->
     </span>
     </div>        
     </div>
@@ -66,6 +66,7 @@
     </div>
 
     <div ng-show="!userIsAnonymous()" style="margin: 70px 30px;">
+    <div class="new_bob" ng-click="init_new_task()" title="Add new task"></div>
         <div ng-show="overview_view==1" >
 
         <h2 class="box_view">Active tasks</h2>
@@ -74,7 +75,7 @@
 
            <div  ng-repeat="task in tasks | orderBy:'deadlineDue'" ng-show="task.state == 'isApproved'" ng-mouseover="hovered = true" ng-mouseout="hovered = false" class="overview_view_box" ng-class="[{task_box_approved: task.state =='isApproved'}, {task_box_rejected: task.state =='isRejected'}, {task_box_draft: task.state =='isDraft'}, {task_box_completed: task.state =='isCompleted'}, {task_box_pending: task.state =='isPendingApproval'}]" ng-click="gotoTask(task.id)">
 
-                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" >x</div>
+                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" ></div>
 
                 <span class="task_department">[[task.department_title]]<br></span>
 
@@ -102,7 +103,7 @@
 
            <div  ng-repeat="task in tasks | orderBy:'deadlineDue'" ng-show="task.state == 'isPendingApproval'" ng-mouseover="hovered = true" ng-mouseout="hovered = false" class="overview_view_box" ng-class="[{task_box_approved: task.state =='isApproved'}, {task_box_rejected: task.state =='isRejected'}, {task_box_draft: task.state =='isDraft'}, {task_box_completed: task.state =='isCompleted'}, {task_box_pending: task.state =='isPendingApproval'}]" ng-click="gotoTask(task.id)">
 
-                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" >x</div>
+                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" ></div>
                 <!-- <div class="task_is_draft" ng-show="task.state =='isDraft'">Draft</div> -->
                 <!-- <div class="task_is_pending_approval" ng-show="task.state =='isPendingApproval'">Approval requested</div> -->
                 <!-- <div class="task_is_approved" ng-show="task.state =='isApproved'">Approved</div> -->
@@ -133,7 +134,7 @@
 
            <div  ng-repeat="task in tasks | orderBy:'deadlineDue'" ng-show="task.state == 'isDraft'" ng-mouseover="hovered = true" ng-mouseout="hovered = false" class="overview_view_box" ng-class="[{task_box_approved: task.state =='isApproved'}, {task_box_rejected: task.state =='isRejected'}, {task_box_draft: task.state =='isDraft'}, {task_box_completed: task.state =='isCompleted'}, {task_box_pending: task.state =='isPendingApproval'}]" ng-click="gotoTask(task.id)">
 
-                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" >x</div>
+                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" ></div>
                 <!-- <div class="task_is_draft" ng-show="task.state =='isDraft'">Draft</div> -->
                 <!-- <div class="task_is_pending_approval" ng-show="task.state =='isPendingApproval'">Approval requested</div> -->
                 <!-- <div class="task_is_approved" ng-show="task.state =='isApproved'">Approved</div> -->
@@ -164,7 +165,7 @@
 
            <div  ng-repeat="task in tasks | orderBy:'deadlineDue'" ng-show="task.state == 'isCompleted'" ng-mouseover="hovered = true" ng-mouseout="hovered = false" class="overview_view_box" ng-class="[{task_box_approved: task.state =='isApproved'}, {task_box_rejected: task.state =='isRejected'}, {task_box_draft: task.state =='isDraft'}, {task_box_completed: task.state =='isCompleted'}, {task_box_pending: task.state =='isPendingApproval'}]" ng-click="gotoTask(task.id)">
 
-                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" >x</div>
+                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" ></div>
                 <!-- <div class="task_is_draft" ng-show="task.state =='isDraft'">Draft</div> -->
                 <!-- <div class="task_is_pending_approval" ng-show="task.state =='isPendingApproval'">Approval requested</div> -->
                 <!-- <div class="task_is_approved" ng-show="task.state =='isApproved'">Approved</div> -->
@@ -194,7 +195,7 @@
 
            <div  ng-repeat="task in tasks | orderBy:'deadlineDue'" ng-show="task.state == 'isRejected'" ng-mouseover="hovered = true" ng-mouseout="hovered = false" class="overview_view_box" ng-class="[{task_box_approved: task.state =='isApproved'}, {task_box_rejected: task.state =='isRejected'}, {task_box_draft: task.state =='isDraft'}, {task_box_completed: task.state =='isCompleted'}, {task_box_pending: task.state =='isPendingApproval'}]" ng-click="gotoTask(task.id)">
 
-                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" >x</div>
+                <div class="delBtn" ng-class="{showDeleteBtn:hovered}" ng-confirm-click="delete_task(task.id)" ng-confirm-click-message="Do you want to permanently delete this task?" ></div>
                 <!-- <div class="task_is_draft" ng-show="task.state =='isDraft'">Draft</div> -->
                 <!-- <div class="task_is_pending_approval" ng-show="task.state =='isPendingApproval'">Approval requested</div> -->
                 <!-- <div class="task_is_approved" ng-show="task.state =='isApproved'">Approved</div> -->

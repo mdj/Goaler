@@ -347,10 +347,12 @@ def overview_json():
         else:
             task['state'] = 'isDraft'
 
-    # # TODO compute booleans: canEdit, canView, isApproved, isPending, isRejected, isProposer, isActive, isCompleted
+
+    c.execute("SELECT company_name, owner as company_owner_id, url_name as company_url FROM companies WHERE id = ?", (str(payload['company_id']),))
+    company_info = c.fetchone()
 
 
-    overview = {"tasks" : tasks}
+    overview = {"tasks" : tasks, "company" : company_info}
     return overview
 
 
@@ -1225,9 +1227,9 @@ def show_task(item):
     return  template('view_task', task={"id" : item, "cid" : 1})
 
 
-@route('/task/new')
-def new_task():    
-        return template('view_task', task={"name" : "New task", "id" : "XX", "cid": 1})
+# @route('/task/new')
+# def new_task():    
+#         return template('view_task', task={"name" : "New task", "id" : "XX", "cid": 1})
 
 @route('/task/new/submit', method="POST")
 def new_task_submit():

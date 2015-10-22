@@ -19,7 +19,7 @@
                 GOD-[[task_id]]-[[creation_date]] [[task_name]]
             </div>
             <div class="controls">
-                <div style="float: left; margin-right: 20px;">File &nbsp; View &nbsp; Share &nbsp; Help</div>  <div id="save_status" ng-show="save_status"> Last save <span  span time-since="save_status" /></span></div>
+                <!--<div style="float: left; margin-right: 20px;">File &nbsp; View &nbsp; Share &nbsp; Help</div> --> <div id="save_status" ng-show="save_status"> Last save <span  span time-since="save_status" /></span></div>
             </div>
 
 
@@ -34,15 +34,6 @@
                     <div id="reopen" class="menu_btn_purple control_btn" ng-click="reopenTask()" ng-show="userIsApprover() && (isApproved() || isRejected() || isCompleted())">
                     Reopen
                     </div>
-
-<!--                     <div id="writeupdate" class="menu_btn_purple control_btn" ng-click="statusUpdate()" ng-show="userIsAssignee()">
-                        Write update
-                    </div>
-
-                    <div id="requpdate" class="menu_btn_purple control_btn" ng-click="reqStatusUpdate()" ng-show="userIsReportingOfficer()">
-                        Request status update
-                    </div>
- -->
                     <div id="complete" class="menu_btn_purple control_btn" ng-click="complete()" ng-show="(userIsReportingOfficer() || userIsApprover()) && isApproved() && !isCompleted()">
                         Mark as completed
                     </div>
@@ -60,11 +51,6 @@
                     <div id="requestApproval" class="menu_btn_purple control_btn" ng-click="requestApproval()"  ng-show="userIsCreator() && !approvalRequested()">
                         Request Approval
                     </div>                    
-
-<!--                     <div id="share" class="menu_btn_purple control_btn" ng-click="share()">
-                        Share
-                    </div> -->
-
             </div>
         </div>
         

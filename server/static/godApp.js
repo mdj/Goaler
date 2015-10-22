@@ -290,6 +290,7 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
     $scope.current_user_id = ($window.sessionStorage.uid) ? $window.sessionStorage.uid : "";
 
     $scope.tasks = [];
+    $scope.company = {};
 
     $scope.overview_view = 1; // box view as default
 
@@ -400,7 +401,7 @@ $scope.load_overview = function() {
         }).success(function(data) {
           // console.log(data)
           $scope.tasks = data.tasks;
-
+          $scope.company = data.company;
 
           for (var j = $scope.tasks.length - 1; j >= 0; j--) {
             
