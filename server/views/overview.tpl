@@ -50,7 +50,7 @@
     </div>         -->
     <div id="paper_frame">
     <div class="paper login_screen" ng-show="userIsAnonymous()">
-        <img src="/static/images/padlock.png" style="width: 100px; height: auto;">
+        <img src="/static/images/padlock.png" style="width: 100px; height: auto; margin-bottom: 30px;">
                   <form ng-submit="login_submit()" >
                     <div>[[message]]</div>
 
