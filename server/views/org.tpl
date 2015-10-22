@@ -13,33 +13,36 @@ table {
 
 <div ng-controller="OrgOverview as god">
 
-    <div id="navi_menu">
-
-        <a href="/" >
-            <div id="home_btn" class="menu_home"></div>
-        </a>
-
+<div class="top_menu">
+    <a href="/" >
+        <div id="navi_menu">
+            <div id="home_btn" class="menu_home">
+        </div>
+    </a>
+    
         <div id="menu_left">
             <div class="menu_title">
-                Goals, Objectives and Deliverables
+                [[company.company_name]]
             </div>
-            <div class="controls">
+            <div class="controls" ng-show="!userIsAnonymous()">
                 <div style="float: left; margin-right: 20px;">
-                    <a href="" ng-click="init_new_task()">New task</a>
-                    <a href="/org" >Company</a>
+
+                    <a href="#" ng-click="init_new_task()" style="color: inherit;">New task</a> &nbsp; <a href="/org" style="color: inherit;" >Company structure</a>
                 </div>
             </div>
-        </div> 
+
+
+        </div>
         
         <div id="menu_right">
             <div class="user_menu"  ng-show="current_user_id">
                [[user_name]]  - [[user_email]] - <a ng-click="logout()">logout</a>
             </div>
-            <div class="master_controls"></div>
+            <div class="master_controls">
+            </div>
         </div>
-        
-    </div>
 
+</div>
 
     <div id="paper_frame">
 

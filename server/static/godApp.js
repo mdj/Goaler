@@ -171,6 +171,7 @@ app.controller('OrgOverview', ['$scope', '$http', '$timeout', '$log', '$location
     $scope.current_user_id = ($window.sessionStorage.uid) ? $window.sessionStorage.uid : "";
 
     $scope.tasks = [];
+    $scope.company = {company_name : "Goaler.net"};
 
     $scope.logout = function() {
             delete $window.sessionStorage.token;
@@ -239,7 +240,8 @@ $scope.load_departments = function() {
     }).success(function(data) {
       console.log("data", data);
       $scope.departments = data.departments;
-
+      $scope.company = data.company;
+      
       var org_data = {
       "cols" : [
           {"label": "Name", "pattern": "", "type": "string"},

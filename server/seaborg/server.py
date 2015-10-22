@@ -351,6 +351,7 @@ def overview_json():
     c.execute("SELECT company_name, owner as company_owner_id, url_name as company_url FROM companies WHERE id = ?", (str(payload['company_id']),))
     company_info = c.fetchone()
 
+    conn.close()
 
     overview = {"tasks" : tasks, "company" : company_info}
     return overview
@@ -401,41 +402,19 @@ def org_json():
 
     c.execute("SELECT departments.*, people.name as head_name, people.email as head_email FROM departments, people WHERE departments.department_head = people.id AND departments.company_id = ?", (payload['company_id'],))
     departments = c.fetchall()
+
+
+    c.execute("SELECT company_name, owner as company_owner_id, url_name as company_url FROM companies WHERE id = ?", (str(payload['company_id']),))
+    company_info = c.fetchone()
+
+
+
     conn.close()
 
-   
-
-    # org = {
-    #   "cols" : [
-    #       {"label": "Name", "pattern": "", "type": "string"},
-    #       {"label": "Manager", "pattern": "", "type": "string"},
-    #       {"label": "ToolTip", "pattern": "", "type": "string"}
-    #   ], 
-    #   "rows" : []
-    # }
-
-
-    #     data.addRows([
-    #       [{v:'Mike', f:'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],
-    #       [{v:'Jim', f:'Jim<div style="color:red; font-style:italic">Vice President</div>'}, 'Mike', 'VP'],
-    #       ['Alice', 'Mike', ''],
-    #       ['Bob', 'Jim', 'Bob Sponge'],
-    #       ['Carol', 'Bob', '']
-    #     ]);
-
-    # for dep in departments:
-    #     # isHead = dep['parent_department'] == dep['id']
-    #     # dep['isHead'] = isHead
-    #     org['rows'].append({ "c": [
-    #           {"v": dep['id'], "f": u'{dep_title}<div style="color:red; font-style:italic">{person_name}</div>'.format(dep_title=dep['title'], person_name=dep['head_name']) },
-    #           {"v": dep['parent_department']},
-    #           {"v": dep['head_name']}
-    #       ]}
-    #     )
 
 
 
-    return {"departments": departments}
+    return {"departments": departments, "company" : company_info}
 
 
 @route('/org')
