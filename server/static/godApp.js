@@ -1,6 +1,4 @@
-google.load('visualization', '1', {packages:['orgchart']});
-
-var app = angular.module('godApp', ['ui.bootstrap','timeSince','googlechart'],function($interpolateProvider) {
+var app = angular.module('godApp', ['ui.bootstrap','timeSince','googlechart','ui.grid'],function($interpolateProvider) {
     // set custom delimiters for angular templates
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
@@ -68,36 +66,30 @@ app.directive('myDatepicker', function ($parse) {
 });
 
 app.directive('ngConfirmClick', [
+  function() {
+    return {
+      priority: 1,
+      link: function(scope, element, attr) {
+        var msg = attr.ngConfirmClickMessage || "Are you sure?";
+        var clickAction = attr.ngConfirmClick;
+        attr.ngClick = "";
+        element.bind('click', function(event) {
+          console.log("confirm click", msg);
+          if (confirm(msg)) {
+            console.log("confirmed");
+            scope.$apply(clickAction)
+          }
+          console.log("bubble");
+          event.stopImmediatePropagation();
+          event.preventDefault();
 
-        function(){
-            return {
-                link: function (scope, element, attr) {
-                    var msg = attr.ngConfirmClick || "Are you sure?";
-                    var clickAction = attr.confirmedClick;
-                    element.bind('click',function (event) {
-                        if ( window.confirm(msg) ) {
-                            scope.$apply(clickAction)
-                        }
-                    });
-                }
-            };
-    }]);
+        });
+      }
+    };
+  }
+]);
 
-/*
- * Adapted from: http://code.google.com/p/gaequery/source/browse/trunk/src/static/scripts/jquery.autogrow-textarea.js
- * Updated from: https://gist.github.com/thomseddon/4703968
- *
- * Works nicely with the following styles:
- * textarea {
- *  resize: none;
- *  transition: 0.05s;
- *  -moz-transition: 0.05s;
- *  -webkit-transition: 0.05s;
- *  -o-transition: 0.05s;
- * }
- *
- * Usage: <textarea auto-grow></textarea>
- */
+
 app.directive('autoGrow', function() {
     return function(scope, element, attr) {
         var minHeight, paddingLeft, paddingRight, $shadow = null;
@@ -157,7 +149,7 @@ app.factory('Page', function() {
    var title = 'default';
    return {
      title: function() { return title; },
-     setTitle: function(newTitle) { console.log("Setting title to", newTitle); title = newTitle; }
+     setTitle: function(newTitle) { title = newTitle; }
    };
 });
 
@@ -299,6 +291,8 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
 
     $scope.tasks = [];
 
+    $scope.overview_view = 1; // box view as default
+
     $scope.logout = function() {
             delete $window.sessionStorage.token;
             delete $window.sessionStorage.uid;
@@ -314,6 +308,24 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
 
   $scope.user_login = {username: '', password: '', 'cid': $scope.company_id}; // cid is company id needed later
   $scope.message = '';
+
+
+$scope.gotoTask = function(tid) {
+  $window.location.href  = "/task/" + tid;
+};
+
+$scope.gridOptions = {
+  };
+  $scope.gridOptions.columnDefs = [
+      // {name:'id'},
+      {name:'Task', field:'name'},
+      {name:'Deadline', field:'deadline_date'},
+        {name:'Responsible', field:'responsible_name'},
+      // {field:'age'}, // showing backwards compatibility with 2.x.  you can use field in place of name
+      // {name: 'address.city'},
+      // {name: 'age again', field:'age'}
+    ];
+   
 
 
   $scope.login_submit = function () {
@@ -359,26 +371,25 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
 
 
 $scope.delete_task = function(task_id) {
-    console.log("tasks", $scope.tasks);
-    for (var i = $scope.tasks.length - 1; i >= 0; i--) {
-        if ($scope.tasks[i].id == task_id) {
+      for (var i = $scope.tasks.length - 1; i >= 0; i--) {
+          if ($scope.tasks[i].id == task_id) {
 
-            $http({
-              url: "/task/" + task_id + "/delete",
-              method: "POST",
-              headers: { 'Content-Type': 'application/json' },
-              data: JSON.stringify({})
-            }).success(function(data) {
-                console.log(data)
-                $scope.tasks.splice(i, 1); // remove locally
-                console.log("tasks", $scope.tasks);
-            });
+              $http({
+                url: "/task/" + task_id + "/delete",
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({})
+              }).success(function(data) {
+                  $scope.tasks.splice(i, 1); // remove locally
+              });
 
-            return;    
-        }
-    }
+              break;
+          }
+      
+      }
 
 }
+
 $scope.load_overview = function() {
 
         $http({
@@ -387,8 +398,25 @@ $scope.load_overview = function() {
           // headers: { 'Content-Type': 'application/json' },
           params: {cid : 1, date_today: new Date().toISOString().slice(0, 10)}//JSON.stringify({"cid" : $scope.company_id})
         }).success(function(data) {
-          console.log(data)
+          // console.log(data)
           $scope.tasks = data.tasks;
+
+
+          for (var j = $scope.tasks.length - 1; j >= 0; j--) {
+            
+            var ndeliverables = $scope.tasks[j].deliverables.length;
+            var ndelivered = 0;
+            for (var i = $scope.tasks[j].deliverables.length - 1; i >= 0; i--) {
+              if ($scope.tasks[j].deliverables[i].isdelivered) ndelivered += 1;
+            }
+            // console.log("Deliverables: ", ndeliverables, "Delivered: ", ndelivered);
+            $scope.tasks[j].ndelivered = ndelivered;
+            $scope.tasks[j].ndeliverables = ndeliverables;
+
+          }
+
+          $scope.gridOptions.data = $scope.tasks; // for tables
+
         });
 }
 
@@ -754,7 +782,23 @@ app.controller('GodViewController', ['$scope', '$http', '$timeout', '$log', '$lo
     });
 
     }
+
+    $scope.load_overview = function() {
+
+        $http({
+          url: "/overview/json",
+          method: "GET",
+          // headers: { 'Content-Type': 'application/json' },
+          params: {cid : $scope.person_company_id, date_today: new Date().toISOString().slice(0, 10)}//JSON.stringify({"cid" : $scope.company_id})
+        }).success(function(data) {
+          $scope.all_tasks = data.tasks;
+        });
+    }
+
+
 $scope.load_task = function() {
+
+    $scope.load_overview();
 
     $http.get("/departments/json")
         .success(function(response) {
@@ -1178,7 +1222,7 @@ $scope.load_task = function() {
       data: JSON.stringify(data)
     }).success(function(data) {
           console.log(data)
-        $scope.save_status = new Date().toISOString();
+        $scope.save_status = new Date();
     });
 
 }
@@ -1191,7 +1235,7 @@ $scope.load_task = function() {
             "text" : $scope.text_deliverable, 
             "task_id" : $scope.task_id, 
             "defined_by": $scope.current_user_id, 
-            "definition_date" : "2025-22-22 12:32:23", 
+            "definition_date" : new Date().toISOString(), 
             "isdelivered" : 0, 
             "priority": 1, 
             "customer" : 1
@@ -1209,22 +1253,33 @@ $scope.load_task = function() {
                 $scope.editorEnabled = false;
                 $scope.name_deliverable = '';
                 $scope.text_deliverable = '';
-                $scope.save_status = new Date().toISOString();
+                $scope.save_status = Date.parse(new_deliverable.definition_date);
                 
             }
         });
     };
     
-    
-    
+
+
+    // Task dependence
+    $scope.name_axiom = '';
+    $scope.text_axiom = '';
+    $scope.dependence_axiom = {name: "Task dependence", id : null};    
+    $scope.setTaskDependence = function(choice) {
+      console.log("Requirement depdencence selected", choice);
+        $scope.dependence_axiom = choice;
+    }
+
     $scope.newAxiom = function () {
 
         var new_axiom = {"name" : $scope.name_axiom, 
             "text" : $scope.text_axiom, 
             "task_id" : $scope.task_id, 
             "defined_by": $scope.current_user_id, 
-            "definition_date" : "2025-22-22 12:32:23"
+            "definition_date" : new Date().toISOString(),
+            "task_dependence_id" : $scope.dependence_axiom.id
         };
+
             
         $http({
           url: "/task/" + global_task_id + "/axiom/add",
@@ -1234,11 +1289,15 @@ $scope.load_task = function() {
         }).success(function(data) {
           // console.log(data)
             if (data['status'] == "ok") {
+                if ($scope.dependence_axiom.id != null) {
+                    new_axiom.dependence = $scope.dependence_axiom;
+                }
                 $scope.axioms.push(new_axiom);
                 $scope.axiomEditorEnabled = false;
                 $scope.name_axiom = '';
                 $scope.text_axiom = '';
-                $scope.save_status = new Date().toISOString();
+                $scope.dependence_axiom = {name: "Task dependence", id : null};    
+                $scope.save_status = Date.parse(new_axiom.definition_date);
             
             }
         });
@@ -1252,7 +1311,7 @@ $scope.load_task = function() {
             "text" : $scope.text_goal, 
             "task_id" : $scope.task_id, 
             "defined_by": $scope.current_user_id, 
-            "definition_date" : "2025-22-22 12:32:23"
+            "definition_date" : new Date().toISOString()
         };
         
         $http({
@@ -1267,7 +1326,7 @@ $scope.load_task = function() {
                 $scope.goalEditorEnabled = false;
                 $scope.name_goal = '';
                 $scope.text_goal = '';
-                $scope.save_status = new Date().toISOString();
+                $scope.save_status = new Date();
         
             }
         });
@@ -1281,7 +1340,7 @@ $scope.load_task = function() {
             "text" : $scope.text_objective, 
             "task_id" : $scope.task_id, 
             "defined_by": $scope.current_user_id, 
-            "definition_date" : "2025-22-22 12:32:23"
+            "definition_date" : new Date().toISOString()
         };
     
         $http({
@@ -1296,7 +1355,7 @@ $scope.load_task = function() {
                 $scope.objectiveEditorEnabled = false;
                 $scope.name_objective = '';
                 $scope.text_objective = '';
-                $scope.save_status = new Date().toISOString();
+                $scope.save_status = new Date();
     
             }
         });
@@ -1309,7 +1368,7 @@ $scope.load_task = function() {
             "task_id" : $scope.task_id, 
             "url" : $scope.url_ref,
             "defined_by": $scope.current_user_id, 
-            "definition_date" : "2025-22-22 12:32:23"
+            "definition_date" : new Date().toISOString()
         };
 
         $http({
@@ -1325,7 +1384,7 @@ $scope.load_task = function() {
                 $scope.comment_ref = '';
                 $scope.text_ref = '';
                 $scope.url_ref = '';
-                $scope.save_status = new Date().toISOString();
+                $scope.save_status = new Date();
 
             }
         });

@@ -93,12 +93,15 @@ def mail(to, to_name, subject, message):
      
     # Optionally - send it – using python's smtplib
     # or just use Django's
-    s = smtplib.SMTP('smtp.gmail.com', 587)
-    s.ehlo()
-    s.starttls()
-    s.ehlo()
-    s.login(gmail_user, gmail_pwd)
-    s.sendmail("", recipient[1], str_io.getvalue())
+
+    # disabled for debugging
+
+    # s = smtplib.SMTP('smtp.gmail.com', 587)
+    # s.ehlo()
+    # s.starttls()
+    # s.ehlo()
+    # s.login(gmail_user, gmail_pwd)
+    # s.sendmail("", recipient[1], str_io.getvalue())
 
 
 
@@ -281,6 +284,17 @@ def overview_json():
 
     c.execute("SELECT axioms.* FROM axioms, tasks WHERE axioms.task_id = tasks.id AND tasks.company_id LIKE ?", (str(payload['company_id']),))
     axioms = c.fetchall()
+    for axiom in axioms:
+        if axiom['task_dependence_id']:
+            print "the task has a depenendence"
+            c.execute("SELECT name, deadline_date FROM tasks WHERE id = ?", (axiom['task_dependence_id'],))
+            axiom_task = c.fetchone()
+            axiom['dependence'] = {
+                "name" : axiom_task['name'],
+                "id" : axiom['task_dependence_id'],
+                "deadline_date" : axiom_task['deadline_date']            
+            }
+
 
     c.execute("SELECT goals.* FROM goals, tasks WHERE goals.task_id = tasks.id AND tasks.company_id LIKE ?", (str(payload['company_id']),))
     goals = c.fetchall()
@@ -320,6 +334,18 @@ def overview_json():
         task['isAssignee'] = payload['id'] == task['responsible']
         task['isRaportingOfficer'] = payload['id'] == task['reporting_to']
         task['deadlineDue'] = (parseDate(task['deadline_date']) - parseDate(request.query.date_today)).days
+
+        # Task state
+        if task['isCompleted']:
+            task['state'] = 'isCompleted'
+        elif task['isApproved']:
+            task['state'] = 'isApproved'
+        elif task['isRejected']:
+            task['state'] = 'isRejected'
+        elif task['isPendingApproval']:
+            task['state'] = 'isPendingApproval'
+        else:
+            task['state'] = 'isDraft'
 
     # # TODO compute booleans: canEdit, canView, isApproved, isPending, isRejected, isProposer, isActive, isCompleted
 
@@ -410,15 +436,8 @@ def org_json():
     return {"departments": departments}
 
 
-
 @route('/org')
 def org():
-
-
-
-
-
-
     return template('org', company={"cid": 1})
 
 
@@ -491,18 +510,18 @@ def add_axiom(task_id):
 
     data = request.json
     if data:
-        # print(data)
+        print(data)
         # print "task_ID", task_id
         
         if task_id != int(data['task_id']):
             # print "ERROR task id mismatch", data['task_id'], task_id
             return {"status" : "nok"}
-            
+        
         conn = sqlite3.connect('seaborg_god.db')
         conn.row_factory = dict_factory
         c = conn.cursor()
 
-        c.execute("INSERT INTO axioms (task_id, name, defined_by, definition_date, text) VALUES (?,?,?,?,?)", (task_id, data['name'], data['defined_by'],data['definition_date'],data['text']))
+        c.execute("INSERT INTO axioms (task_id, name, defined_by, definition_date, text, task_dependence_id) VALUES (?,?,?,?,?,?)", (task_id, data['name'], data['defined_by'],data['definition_date'],data['text'],data['task_dependence_id']))
         conn.commit()
         conn.close()
         return {"status" : "ok"}
@@ -1144,9 +1163,18 @@ def show_task(item):#, uid):
 
     task_id = str(item)
     # print "task_id", task_id
-    c.execute("SELECT axioms.name, axioms.definition_date, axioms.text, axioms.definition_date, people.name as responsible_name, people.email as responsible_email FROM axioms, people WHERE axioms.task_id LIKE ? AND axioms.defined_by = people.id", (task_id,))
+    c.execute("SELECT axioms.*, people.name as responsible_name, people.email as responsible_email FROM axioms, people WHERE axioms.task_id LIKE ? AND axioms.defined_by = people.id", (task_id,))
     axioms = c.fetchall()
-    # print(axioms)
+
+    for axiom in axioms:
+        if axiom['task_dependence_id']:
+            print "the task has a depenendence"
+            c.execute("SELECT name FROM tasks WHERE id = ?", (axiom['task_dependence_id'],))
+            axiom_task = c.fetchone()
+            axiom['dependence'] = {
+                "name" : axiom_task['name'],
+                "id" : axiom['task_dependence_id']
+            }
 
     c.execute("SELECT * FROM goals WHERE task_id=?", (str(task_id),))
     goals = c.fetchall()

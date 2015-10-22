@@ -178,11 +178,16 @@
         <div id="outline">[[outline]]</div>
     </div>
 
-    <div class="h3" title="Axioms are specific key requirements that specify the business benefits in detail.">Axioms</div>
+    <div class="h3" title="Axioms are specific key requirements that specify the business benefits in detail.">Requirements</div>
     <ol>
         <li ng-repeat="axiom in axioms" class="item">
-            <span class="headline">[[axiom.name]]</span>
-            <p class="comment">[[axiom.text]]</p>
+            <span ng-if="axiom.dependence">
+                <span class="headline"><a ng-href="/task/[[axiom.dependence.id]]">[[axiom.dependence.name]]</a></span>
+            </span>
+            <span ng-if="!axiom.dependence">
+                <span class="headline">[[axiom.name]]</span>
+                <p class="comment">[[axiom.text]]</p>
+            </span>
         </li>
 
         <div ng-show="userCanEdit()">
@@ -191,11 +196,23 @@
                     <h3 style="padding: 0; margin: 0;"><input ng-model="name_axiom" type="text" name="name_axiom" value="" placeholder="Title of axiom ..." style="font: inherit; width: 100%" id="name_axiom"></h3>
                     <textarea ng-model="text_axiom" name="text_axiom" placeholder="Elaborate on the axiom if needed ..." style="min-height: 60px;"  auto-grow>></textarea>
 
+
+                <b>OR:</b> <br>
+                <h3><span dropdown on-toggle="toggled(open)" ng-show="userCanEdit()">
+      <a href id="simple-dropdown" dropdown-toggle>
+      [[dependence_axiom.name]]
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="simple-dropdown">
+        <li ng-repeat="choice in all_tasks" ng-if="choice.id != task_id">
+          <a href ng-click="setTaskDependence(choice)">[[choice.name]]</a>
+        </li>
+      </ul>
+    </span></h3><br><br>
                 <input ng-click="newAxiom()" type="submit" name="newAxiom" value="Add axiom" id="newAxiom" style="float: right">
                 <input ng-click="axiomEditorEnabled=!axiomEditorEnabled" value="Cancel" type="submit" style="float: right">
                 </div>
             </li>
-            <li style="list-style: none;"><a href="#" ng-show="!axiomEditorEnabled" ng-click="axiomEditorEnabled=!axiomEditorEnabled" style=" text-decoration: none; color: #888; font-size: 90%;">New axiom</a></li>
+            <li style="list-style: none;"><a href="#" ng-show="!axiomEditorEnabled" ng-click="axiomEditorEnabled=!axiomEditorEnabled" style=" text-decoration: none; color: #888; font-size: 90%;">New requirement</a></li>
          </div>   
     </ol>
 

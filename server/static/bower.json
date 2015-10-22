@@ -1,0 +1,34 @@
+{
+  "name": "Goaler",
+  "version": "0.0.1",
+  "homepage": "https://github.com/mdj/Goaler",
+  "authors": [
+    "Morten Dam Jørgensen <mdj@mdj.dk>"
+  ],
+  "description": "Task management for ExOs",
+  "main": "static/main.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "tasks"
+  ],
+  "license": "Copyrighted, no distribution",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "jquery-ui": "~1.11.4",
+    "bootstrap": "~3.3.5",
+    "angular-animate": "~1.4.7",
+    "angular-bootstrap": "~0.14.2",
+    "angular-google-chart": "~0.0.11",
+    "angular-ui-grid": "~3.0.7"
+  }
+}
