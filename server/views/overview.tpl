@@ -9,7 +9,7 @@
 
 <div ng-controller="GodOverview as god">
 
-
+<div class="top_menu">
     <a href="/" >
         <div id="navi_menu">
             <div id="home_btn" class="menu_home">
@@ -23,7 +23,7 @@
             <div class="controls" ng-show="!userIsAnonymous()">
                 <div style="float: left; margin-right: 20px;">
 
-                    <a href="/org">Company structure</a>
+                    <a href="#" ng-click="init_new_task()" style="color: inherit;">New task</a> &nbsp; <a href="/org">Company structure</a>
                 </div>
             </div>
 
@@ -37,13 +37,16 @@
             <div class="master_controls">
             </div>
         </div>
-    <div style="position: absolute; top: 60px; width: 100%; box-shadow: 0px 2px 3px #ccc; height: 30px; border-top: 1px solid #e8e8e8; background-color: #efefef; z-index: 100; padding: 3px; font-weight: bold; color: purple" ng-show="!userIsAnonymous()">
+
+</div>
+
+
+<!--     <div style="position: absolute; top: 60px; width: 100%; box-shadow: 0px 2px 3px #ccc; height: 30px; border-top: 1px solid #e8e8e8; background-color: #efefef; z-index: 100; padding: 3px; font-weight: bold; color: purple" ng-show="!userIsAnonymous()">
     <span style="float: left; margin-left: 10px; color: #555;"><a href="#" ng-click="init_new_task()" style="color: inherit;">New task</a></span>
     <span style="float: right; color: #555;">
-        <!-- <a href="#" ng-click="overview_view=1" style="color: inherit;">box</a> – <a href="#" ng-click="overview_view=2" style="color: inherit;">gantt</a> – <a href="#" ng-click="overview_view=3" style="color: inherit;">list</a> - <a href="#" ng-click="overview_view=4" style="color: inherit;">people</a> – <a href="#" ng-click="overview_view=5" style="color: inherit;">flowchart</a> – <a href="#" ng-click="overview_view=6" style="color: inherit;">calendar</a> -->
+        <a href="#" ng-click="overview_view=1" style="color: inherit;">box</a> – <a href="#" ng-click="overview_view=2" style="color: inherit;">gantt</a> – <a href="#" ng-click="overview_view=3" style="color: inherit;">list</a> - <a href="#" ng-click="overview_view=4" style="color: inherit;">people</a> – <a href="#" ng-click="overview_view=5" style="color: inherit;">flowchart</a> – <a href="#" ng-click="overview_view=6" style="color: inherit;">calendar</a>
     </span>
-    </div>        
-    </div>
+    </div>         -->
 
     <div id="paper_frame">
     <div class="paper login_screen" ng-show="userIsAnonymous()">
