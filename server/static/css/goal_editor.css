@@ -21,6 +21,7 @@
     .login_screen {
         background-color: #ccc;
         text-align: center;
+        margin: 20% auto;
     }
     #paper_frame {
         overflow: scroll;
