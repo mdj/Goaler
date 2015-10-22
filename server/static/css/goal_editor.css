@@ -22,6 +22,7 @@
         background-color: #ccc;
         text-align: center;
         margin: 50px auto;
+        color: #666;
     }
     #paper_frame {
         overflow: scroll;
