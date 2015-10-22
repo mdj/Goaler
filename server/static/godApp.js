@@ -290,7 +290,7 @@ app.controller('GodOverview', ['$scope', '$http', '$timeout', '$log', '$location
     $scope.current_user_id = ($window.sessionStorage.uid) ? $window.sessionStorage.uid : "";
 
     $scope.tasks = [];
-    $scope.company = {};
+    $scope.company = {company_name : "Goaler.net"};
 
     $scope.overview_view = 1; // box view as default
 

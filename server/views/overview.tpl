@@ -20,7 +20,7 @@
             <div class="menu_title">
                 [[company.company_name]]
             </div>
-            <div class="controls">
+            <div class="controls" ng-show="!userIsAnonymous()">
                 <div style="float: left; margin-right: 20px;">
 
                     <a href="/org">Company structure</a>
