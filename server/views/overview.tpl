@@ -114,7 +114,7 @@
                 <div class="task_assigned">Task assigned to:<br><b>[[task.responsible_name]]</b></div>
                 
                 <div class="task_deadline">Deadline by [[task.deadline_date]].</div>
-                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0}]">
+                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0 && task.ndeliverables > 0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0 || task.ndeliverables == 0}]" >
                     <input type="checkbox" checked="checked" disabled> [[task.ndelivered]]/[[task.ndeliverables]]
                 </div>
                 <div class="task_due_box" ng-class="[{task_due: task.deadlineDue == 0}, {task_overdue: task.deadlineDue < 0}, {task_not_due: task.deadlineDue > 0}]">
@@ -145,7 +145,7 @@
                 <div class="task_assigned">Task assigned to:<br><b>[[task.responsible_name]]</b></div>
                 
                 <div class="task_deadline">Deadline by [[task.deadline_date]].</div>
-                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0}]">
+                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0 && task.ndeliverables > 0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0 || task.ndeliverables == 0}]" >
                     <input type="checkbox" checked="checked" disabled> [[task.ndelivered]]/[[task.ndeliverables]]
                 </div>
                 <div class="task_due_box" ng-class="[{task_due: task.deadlineDue == 0}, {task_overdue: task.deadlineDue < 0}, {task_not_due: task.deadlineDue > 0}]">
@@ -179,7 +179,7 @@
                 <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0}]">
                     <input type="checkbox" checked="checked" disabled> [[task.ndelivered]]/[[task.ndeliverables]]
                 </div>
-                <div class="task_due_box" ng-class="[{task_due: task.deadlineDue == 0}, {task_overdue: task.deadlineDue < 0}, {task_not_due: task.deadlineDue > 0}]">
+                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0 && task.ndeliverables > 0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0 || task.ndeliverables == 0}]" >
                     <span ng-if="(task.deadlineDue < 0) && (task.ndelivered-task.ndeliverables) != 0">Task overdue</span>
                     <span ng-if="task.deadlineDue > 0">Task due in [[task.deadlineDue]] days</span>
                     <span ng-if="task.deadlineDue == 0">Task due today</span>
@@ -206,7 +206,7 @@
                 <div class="task_assigned">Task assigned to:<br><b>[[task.responsible_name]]</b></div>
                 
                 <div class="task_deadline">Deadline by [[task.deadline_date]].</div>
-                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0}]">
+                <div  ng-class="[{deliverables_all_checked: (task.ndelivered-task.ndeliverables)==0 && task.ndeliverables > 0},{status_deliverables: (task.ndelivered-task.ndeliverables)!=0 || task.ndeliverables == 0}]" >
                     <input type="checkbox" checked="checked" disabled> [[task.ndelivered]]/[[task.ndeliverables]]
                 </div>
                 <div class="task_due_box" ng-class="[{task_due: task.deadlineDue == 0}, {task_overdue: task.deadlineDue < 0}, {task_not_due: task.deadlineDue > 0}]">
